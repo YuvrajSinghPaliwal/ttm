@@ -1,0 +1,85 @@
+<div class="tickets-container">
+  <h2>Your Booked Tickets</h2>
+
+  <div *ngIf="isLoading" class="loading-indicator">Loading your bookings...</div>
+
+  <div *ngIf="error && !isLoading" class="error-message">{{ error }}</div>
+
+  <div *ngIf="!isLoading && !error && userBookings.length > 0; else noBookings">
+    <div class="tickets-table-wrapper">
+      <table class="tickets-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Train</th>
+            <th>Train No</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Journey Date</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Seats</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let booking of userBookings">
+            <td>{{ booking.bookingId }}</td>
+            <td>{{ booking.trainName }}</td>
+            <td>{{ booking.trainNo }}</td>
+            <td>{{ booking.fromStation }}</td>
+            <td>{{ booking.toStation }}</td>
+            <td>{{ booking.journeyDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ booking.startTime }}</td>
+            <td>{{ booking.endTime }}</td>
+            <td>{{ booking.seatNumbers }}</td>
+            <td>{{ booking.price | currency:'INR':'symbol':'1.0-0' }}</td>
+            <td>
+              <span [ngClass]="'status-' + (booking.bookingStatus.toLowerCase() || 'unknown')">{{ booking.bookingStatus }}</span>
+            </td>
+            <td>
+              <button *ngIf="booking.bookingStatus?.toLowerCase() !== 'cancelled'"
+                      class="btn red small"
+                      (click)="openCancelConfirmModal(booking)"
+                      [disabled]="isCancelling"> Cancel </button>
+              <span *ngIf="booking.bookingStatus?.toLowerCase() === 'cancelled'">Cancelled</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ng-template #noBookings>
+    <div *ngIf="!isLoading && !error" class="no-tickets-message">
+      You have not booked any tickets yet. <a routerLink="/customer/book-ticket">Book Now!</a>
+    </div>
+  </ng-template>
+
+  <div class="action-buttons">
+    <a routerLink="/customer/dashboard" class="btn">Back to Dashboard</a>
+  </div>
+
+   <div *ngIf="showCancelConfirm" class="modal" style="display: block;">
+      <div class="modal-content">
+         <h3>Confirm Cancellation</h3>
+          <div *ngIf="bookingToCancel">
+            <p>Are you sure you want to cancel booking <strong>{{ bookingToCancel.bookingId }}</strong>?</p>
+            <p>
+              Train: {{ bookingToCancel.trainName }} ({{ bookingToCancel.trainNo }}) <br>
+              Journey: {{ bookingToCancel.fromStation }} to {{ bookingToCancel.toStation }} on {{ bookingToCancel.journeyDate | date: 'mediumDate' }}
+            </p>
+         </div>
+         <div *ngIf="cancelError" class="error-message">{{ cancelError }}</div>
+         <div class="button-group">
+              <button (click)="confirmAndCancelBooking()" class="btn red" [disabled]="isCancelling">
+              {{ isCancelling ? 'Cancelling...' : 'Yes, Cancel' }}
+            </button>
+            <button (click)="closeCancelConfirmModal()" class="btn" [disabled]="isCancelling">No</button>
+         </div>
+      </div>
+   </div>
+   <div *ngIf="showCancelConfirm" class="modalOverlay" style="display: block;" (click)="closeCancelConfirmModal()"></div>
+</div>

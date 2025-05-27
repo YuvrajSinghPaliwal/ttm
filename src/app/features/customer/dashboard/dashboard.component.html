@@ -1,0 +1,48 @@
+<div class="customer-container">
+    <div *ngIf="isLoading && !currentUser" class="loading-indicator">Loading user data...</div>
+    <div *ngIf="error && !isLoading && !currentUser" class="error-message">{{ error }}</div>
+  
+    <div class="welcome-banner" *ngIf="currentUser">
+      <h2>Welcome, <span id="customerName">{{ currentUser.userName || 'Customer' }}</span>!</h2>
+      <p>Manage your bookings and plan your journeys.</p>
+    </div>
+  
+    <div class="dashboard-grid" *ngIf="currentUser">
+      <div class="dashboard-card">
+        <h3>Quick Actions</h3>
+        <div class="quick-actions">
+            <a routerLink="/customer/book-ticket" class="btn green">Book New Ticket</a>
+            <a routerLink="/customer/view-tickets" class="btn">View My Tickets</a>
+        </div>
+      </div>
+  
+      <div class="dashboard-card">
+        <h3>Your Ticket Summary</h3>
+        <div id="ticketStats">
+            <div *ngIf="isLoading" class="loading-indicator">Loading summary...</div>
+            <div *ngIf="error && !isLoading" class="error-message">{{ error }}</div>
+  
+            <ng-container *ngIf="!isLoading && !error">
+                <div *ngIf="(ticketCounts.get('Total') ?? 0) > 0; else noTicketsFound">
+                    <div class="stat-item">
+                      <span>AC Passengers Booked:</span>
+                      <span>{{ ticketCounts.get('AC') ?? 0 }}</span> </div>
+                    <div class="stat-item">
+                      <span>SL (Sleeper) Passengers Booked:</span>
+                      <span>{{ ticketCounts.get('SL') ?? 0 }}</span> </div>
+                    <hr class="stat-divider">
+                    <div class="stat-item total-stat">
+                      <span style="font-weight:bold;">Total Passengers Booked:</span>
+                      <span style="font-weight:bold;">{{ ticketCounts.get('Total') ?? 0 }}</span> </div>
+                </div>
+                <ng-template #noTicketsFound>
+                  <div class="no-data">You have no active bookings.</div>
+                </ng-template>
+            </ng-container>
+        </div>
+      </div>
+    </div> <p *ngIf="!currentUser && !isLoading && error" class="error-message">Could not load dashboard data.</p>
+  
+  </div> 
+
+ 

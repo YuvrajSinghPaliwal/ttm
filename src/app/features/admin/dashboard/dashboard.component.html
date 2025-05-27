@@ -1,0 +1,93 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h2>Admin Dashboard</h2>
+  </div>
+
+  <div class="admin-grid">
+
+    <div class="admin-card">
+      <h3>Ticket Sales Summary</h3>
+      <div id="salesDataContainer">
+        <div *ngIf="isLoadingSales" class="loading-indicator">Loading sales data...</div>
+        <div *ngIf="salesError && !isLoadingSales" class="error-message">{{ salesError }}</div>
+
+        <div *ngIf="!isLoadingSales && !salesError && totalPassengersBooked > 0; else noSalesData">
+           <ng-container *ngFor="let item of salesSummary | keyvalue">
+               <div class="stat-item" *ngIf="item.key !== 'Total'"> <span>{{ item.key }} Passengers Booked:</span> <span>{{ item.value }}</span>
+               </div>
+           </ng-container>
+          <hr *ngIf="salesSummary.size > 0"> <div class="stat-item total-stat">
+            <span style="font-weight:bold;">Total Passengers Booked:</span>
+            <span style="font-weight:bold;">{{ totalPassengersBooked }}</span>
+          </div>
+        </div>
+
+        <ng-template #noSalesData>
+          <div *ngIf="!isLoadingSales && !salesError && totalPassengersBooked === 0" class="no-data">
+            No ticket sales data available yet.
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Manage Users ({{ isLoadingUsers ? '...' : totalUsers }})</h3>
+       <div *ngIf="isLoadingUsers" class="loading-indicator">Loading users...</div>
+       <div *ngIf="usersError && !isLoadingUsers" class="error-message">{{ usersError }}</div>
+
+      <div *ngIf="!isLoadingUsers && !usersError && usersSnippet.length > 0; else noUserData">
+        <ul class="management-list" id="userManagementList">
+          <li *ngFor="let user of usersSnippet">
+            <div class="item-info">
+                <span class="item-id">{{ user.userName }} ({{ user.userId }})</span>
+                <span class="item-details">{{ user.email || 'N/A' }} | {{ user.contact || 'N/A' }} | {{ user.type || 'N/A' }}</span>
+            </div>
+            </li>
+          <li *ngIf="totalUsers > usersSnippet.length" class="view-all-link">
+            <a routerLink="/admin/manage-users">View all {{ totalUsers }} users...</a>
+          </li>
+        </ul>
+      </div>
+       <ng-template #noUserData>
+         <div *ngIf="!isLoadingUsers && !usersError && totalUsers === 0" class="no-data">
+          No registered users found.
+        </div>
+      </ng-template>
+      <div class="card-actions">
+        <a routerLink="/admin/manage-users" class="btn">Manage All Users</a>
+      </div>
+    </div>
+
+    <div class="admin-card">
+       <h3>Manage Trains ({{ isLoadingTrains ? '...' : totalTrains }})</h3>
+       <div *ngIf="isLoadingTrains" class="loading-indicator">Loading trains...</div>
+       <div *ngIf="trainsError && !isLoadingTrains" class="error-message">{{ trainsError }}</div>
+
+       <div *ngIf="!isLoadingTrains && !trainsError && trainsSnippet.length > 0; else noTrainData">
+          <ul class="management-list" id="trainManagementList">
+            <li *ngFor="let train of trainsSnippet">
+              <div class="item-info">
+                  <span class="item-id">{{ train.trainNo }}: {{ train.trainName }}</span>
+                  <span class="item-details">
+                      {{ getOrigin(train) }} <i class="fas fa-arrow-right"></i> {{ getDestination(train) }} |
+                      AC: {{train.availableAcSeats}}/{{ train.totalAcSeats }} |
+                      SL: {{train.availableSleeperSeats}}/{{ train.totalSleeperSeats }}
+                  </span>
+              </div>
+               </li>
+            <li *ngIf="totalTrains > trainsSnippet.length" class="view-all-link">
+                <a routerLink="/admin/manage-trains">View all {{ totalTrains }} trains...</a>
+            </li>
+          </ul>
+       </div>
+       <ng-template #noTrainData>
+         <div *ngIf="!isLoadingTrains && !trainsError && totalTrains === 0" class="no-data">
+            No trains registered yet. <a routerLink="/admin/manage-trains">Add one?</a>
+          </div>
+       </ng-template>
+       <div class="card-actions">
+        <a routerLink="/admin/manage-trains" class="btn green">Add / Manage Trains</a>
+      </div>
+    </div>
+
+  </div> </div> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />

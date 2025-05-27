@@ -1,0 +1,119 @@
+/*hey*/
+.user-management-container{
+    min-height: 530px;
+}
+  /* manage-users.component.css */
+
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0%; /* Pushes modal down from very top */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    z-index: 1050;
+    background-color: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    margin: 4% auto;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    align-items: center; /* instead of flex-start */
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+  }
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+   margin-bottom: 15px;
+   }
+
+   .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+  }
+
+  .tickets-container {
+    margin-bottom: 220px;
+    
+}
+
+    
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 6px;
+    font-size: 14px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    display: block;
+  }
+  
+  .password-wrapper {
+    position: relative;
+  }
+  
+  .password-wrapper input {
+    width: 100%;
+    padding-right: 60px;
+  }
+  
+  .password-wrapper > button{
+    margin-top: 0;
+  }
+  
+  
+  .toggle-btn {
+    position: absolute;
+    right: 5px;
+    top: 3px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+    background: #ddd;
+    border-radius: 4px;
+  }

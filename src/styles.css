@@ -1,0 +1,1330 @@
+/* You can add global styles to this file, and also import other style files */
+/* --- modern-styles.css --- */
+
+
+
+/* :root defines CSS variables for easy theme management */
+:root {
+    --primary-color: #0056b3; /* A slightly deeper blue */
+    --secondary-color: #f8f9fa; /* Light grey */
+    --accent-color: #ffc107; /* Amber/Yellow */
+    --success-color: #28a745; /* Green */
+    --danger-color: #dc3545; /* Red */
+    --light-color: #ffffff; /* White */
+    --dark-color: #343a40; /* Dark Grey/Black */
+    --text-color: #212529; /* Near black for text */
+    --border-color: #dee2e6; /* Light border color */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --border-radius-sm: 0.25rem; /* 4px */
+    --border-radius-md: 0.5rem; /* 8px */
+    --font-family-sans-serif: 'Roboto', sans-serif;
+}
+
+/* --- Global Resets & Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-sans-serif);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 16px; /* Base font size */
+    padding: 0; /* Remove default body padding */
+}
+
+/* --- Utility Classes --- */
+.container {
+    width: 90%;
+    max-width: 800px; /* Adjust max-width as needed */
+    margin: 40px auto; /* Add more top/bottom margin */
+    background-color: var(--light-color);
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    text-align: left; /* Default alignment */
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* --- Logo --- */
+.logo {
+    text-align: center; /* Center logos if they are block elements */
+    padding: 20px 0; /* Add some padding */
+    background-color: var(--light-color); /* Give logos a consistent background if needed */
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-height: 60px; /* Control logo size */
+    width: auto;
+    display: inline-block; /* Allow centering */
+}
+
+/* --- Headings --- */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-weight: 500; /* Medium weight */
+    text-align: center; /* Center headings by default */
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+
+/* --- Links --- */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--dark-color);
+    text-decoration: underline;
+}
+
+/* --- Buttons --- */
+button, .btn { /* Style class 'btn' as well */
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem; /* 16px */
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-weight: 500;
+    display: inline-block; /* Ensure buttons behave predictably */
+    text-align: center;
+}
+
+button:hover, .btn:hover {
+    background-color: #004494; /* Darker shade of primary */
+    box-shadow: var(--shadow-sm);
+}
+
+/* Specific Button Colors */
+button.orange, .btn.orange { background-color: var(--accent-color); color: var(--dark-color); }
+button.orange:hover, .btn.orange:hover { background-color: #e6a12f; }
+button.red, .btn.red { background-color: var(--danger-color); }
+button.red:hover, .btn.red:hover { background-color: #c82333; }
+button.green, .btn.green { background-color: var(--success-color); }
+button.green:hover, .btn.green:hover { background-color: #218838; }
+
+/* Make buttons full width inside forms/containers if needed */
+.container form button,
+.container .button-container button {
+    width: auto; /* Allow natural width */
+    min-width: 120px; /* Set a minimum width */
+    display: inline-block;
+    margin: 10px 5px;
+}
+
+/* --- Forms --- */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form elements */
+}
+
+form label {
+    margin-bottom: 0px; /* Reduced margin */
+    font-weight: 500; /* Medium weight */
+    display: block; /* Ensure labels take full width */
+    color: var(--dark-color);
+    text-align: left;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form input[type="number"],
+form select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input:focus,
+form select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25); /* Focus ring */
+}
+
+form input[readonly] {
+    background-color: var(--secondary-color);
+    cursor: not-allowed;
+}
+
+form p { /* Style paragraph text within forms (e.g., "Already have an account?") */
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* --- Tables --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: var(--light-color);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden; /* Ensures border-radius is applied to table */
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid var(--border-color); /* Keep borders for clarity */
+}
+
+th {
+    background-color: var(--secondary-color); /* Light grey header */
+    font-weight: 500;
+    color: var(--primary-color);
+    text-align: center;
+}
+
+tr:nth-child(even) {
+     background-color: #fdfdfd; /* Very light alternate row color */
+}
+
+tr:hover {
+    background-color: #e9ecef; /* Hover effect */
+}
+
+td button { /* Style buttons inside table cells */
+    padding: 5px 10px;
+    font-size: 0.875rem; /* Smaller font size */
+    margin: 0 2px; /* Adjust margin */
+}
+
+/* --- Navigation Bars --- */
+/* Style for the navbar in customer.html */
+.navbar {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: 0 20px; /* Remove vertical padding to rely on items */
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar .logo { /* Navbar specific logo styling */
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700; /* Bold */
+    display: flex;
+    align-items: center;
+    padding: 0; /* Reset padding */
+    background: none;
+    box-shadow: none;
+    margin-bottom: 0;
+    color: var(--light-color);
+}
+
+.navbar .logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.user-info {
+    font-size: 0.875rem; /* 14px */
+}
+.user-info a {
+    color: var(--accent-color); /* Highlight links */
+    text-decoration: none;
+}
+.user-info a:hover {
+    text-decoration: underline;
+}
+
+
+.navbar-menu {
+    display: flex;
+    padding: 5px 0; /* Add some padding */
+}
+
+.navbar-menu a {
+    color: var(--light-color);
+    text-decoration: none;
+    padding: 10px 16px;
+    margin-right: 5px;
+    font-size: 0.9rem; /* Slightly smaller font */
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.3s ease;
+}
+
+.navbar-menu a:hover, .navbar-menu a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Style for nav in LandingPage.html */
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+    background-color: var(--primary-color); /* Use consistent color */
+}
+
+header nav .logo { /* Ensure consistency */
+     font-size: 1.5rem;
+     font-weight: bold;
+     color: white;
+     padding: 10px 0;
+     background: none;
+     box-shadow: none;
+     margin-bottom: 0;
+ }
+
+header nav .logo img {
+    max-height: 50px; /* Adjust size */
+}
+
+header .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px; /* Adjust gap */
+    padding: 0;
+    margin: 0;
+}
+
+header .nav-links li { display: inline; }
+
+header .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem; /* Standardize font size */
+    padding: 15px 0; /* Vertical padding for larger hit area */
+    transition: color 0.3s ease;
+}
+
+header .nav-links a:hover {
+    color: var(--accent-color); /* Use accent color for hover */
+    text-decoration: none;
+}
+
+
+/* --- Specific Page Sections --- */
+
+/* Admin Dashboard - Sales Data */
+#salesData {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    width: 90%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#salesData p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    margin: 10px 0;
+}
+
+/* Customer Page Card */
+.card {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    margin-bottom: 0; /* Remove margin from h3 inside header */
+    text-align: left;
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: center; /* Center buttons */
+}
+
+/* Landing Page Sections (LandingPage.html) */
+.hero {
+    height: 70vh; /* Adjust height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--light-color);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: relative; /* Needed for pseudo-element overlay */
+}
+
+.hero::before { /* Dark overlay for better text visibility */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative; /* Ensure content is above the overlay */
+    z-index: 2;
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 2.8rem; /* Adjust size */
+    margin-bottom: 15px;
+    color: var(--light-color); /* Ensure heading is white */
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+
+.hero .btn { /* Style button specifically in hero */
+    background: var(--accent-color);
+    color: var(--dark-color);
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.hero .btn:hover {
+    background: #e6a12f;
+}
+
+.features {
+    padding: 60px 20px;
+    text-align: center;
+    background: var(--light-color); /* Use white background */
+}
+
+.features h2 {
+    font-size: 2.2rem;
+    margin-bottom: 40px;
+    color: var(--primary-color);
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.feature-card {
+    background: var(--secondary-color); /* Light background for cards */
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px); /* Subtle lift effect */
+    box-shadow: var(--shadow-md);
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+.feature-card p {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+.feature-card img { /* Styles for images in feature cards (landing.html) */
+    max-width: 80px;
+    margin-bottom: 15px;
+}
+.feature-card .btn {
+    margin-top: 20px;
+    background-color: var(--primary-color);
+    color: var(--light-color);
+}
+.feature-card .btn:hover {
+     background-color: #004494;
+}
+
+/* --- Modals --- */
+#modalOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    z-index: 999;
+}
+
+/* Common styles for modals */
+#updateModal, #cancelModal, .promptModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-color);
+    padding: 30px; /* More padding */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius-md);
+    z-index: 1000;
+    width: 90%;
+    max-width: 450px; /* Slightly wider modal */
+    text-align: center;
+}
+
+#updateModal h3, #cancelModal h3, .promptModal h3 { /* Modal headings */
+     margin-top: 0;
+     margin-bottom: 25px;
+     font-size: 1.5rem;
+ }
+
+#updateModal .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+#updateModal label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+#updateModal input {
+    width: 100%; /* Inputs take full width */
+    margin: 0; /* Remove default margins */
+}
+
+.button-group { /* Modal button container */
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Space between buttons */
+    margin-top: 25px;
+}
+
+#cancelModal p { /* Style text in cancel modal */
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+.promptModal p { /* Style text in cancel modal */
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Show modal (using a class 'show' might be better than direct style manipulation if possible) */
+.modal.show,
+#updateModal.show,
+#cancelModal.show,
+.promptModal.show,
+#modalOverlay.show {
+    display: block; /* Or flex, depending on modal content */
+}
+
+
+/* --- Footer --- */
+footer, .footer {
+    background: var(--dark-color); /* Dark footer */
+    color: var(--secondary-color); /* Light text */
+    text-align: center;
+    padding: 0px 0;
+    margin-top: 40px; /* Space above footer */
+    font-size: 0.9rem;
+}
+
+footer .footer-content p, .footer p {
+     margin-bottom: 0px;
+ }
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+
+    .navbar-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .navbar .logo { margin-bottom: 10px; }
+    .navbar-menu { flex-direction: column; align-items: center; }
+    .navbar-menu a { width: 100%; text-align: center; margin-bottom: 5px; }
+
+    header nav { flex-direction: column; }
+    header .nav-links { flex-direction: column; gap: 0; width: 100%; }
+    header .nav-links li { width: 100%; }
+    header .nav-links a { padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    header .nav-links li:last-child a { border-bottom: none; }
+
+
+    .feature-grid {
+        grid-template-columns: 1fr; /* Stack features on smaller screens */
+    }
+
+    th, td {
+        padding: 8px 10px; /* Reduce padding */
+        font-size: 0.9rem; /* Slightly smaller font in tables */
+    }
+
+    button, .btn { padding: 10px 15px; font-size: 0.95rem; }
+}
+/* --- Add these to your modern-styles.css --- */
+
+/* --- Header/Navbar (Consistent across pages) --- */
+.main-header {
+    background-color: var(--primary-color);
+    padding: 10px 0;
+    box-shadow: var(--shadow-md);
+    position: sticky; /* Make header sticky */
+    top: 0;
+    z-index: 100;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.navbar .logo {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .logo img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.navbar .logo-text { /* Optional: Add text next to logo */
+    color: var(--light-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--light-color);
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--light-color); /* Keep color light on hover */
+    text-decoration: none;
+}
+.nav-links a.btn-nav { /* Style for button-like nav links */
+     background-color: var(--accent-color);
+     color: var(--dark-color);
+     font-weight: 500;
+     padding: 8px 8px;
+ }
+ .nav-links a.btn-nav:hover {
+     background-color: #e6a12f;
+     color: var(--dark-color);
+
+ }
+
+
+/* --- Landing Page Specific Styles --- */
+.hero {
+    background: url('../src/assets/images/trainLogo.jfif') no-repeat center center/cover; /* Ensure path is correct */
+    height: 80vh; /* Adjust as needed */
+    /* Other hero styles from previous CSS remain */
+}
+
+.features {
+    /* Styles from previous CSS remain */
+}
+.feature-grid {
+     /* Styles from previous CSS remain */
+}
+.feature-card {
+    /* Styles from previous CSS remain */
+}
+
+/* --- Login/Register Page Styles --- */
+.auth-container {
+    width: 100%;
+    min-height: calc(100vh - 70px); /* Full height minus header */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background: linear-gradient(to bottom right, var(--primary-color), #007bff); /* Subtle gradient */
+}
+
+.auth-form-box {
+    background-color: var(--light-color);
+    padding: 40px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.auth-form-box h2 {
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.auth-form-box .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.auth-form-box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.auth-form-box input[type="text"],
+.auth-form-box input[type="password"],
+.auth-form-box input[type="email"],
+.auth-form-box input[type="number"] { /* Added number for Aadhaar/Mobile */
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-form-box input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25);
+}
+
+.auth-form-box button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.auth-form-box .form-link {
+    margin-top: 25px;
+    font-size: 0.95rem;
+}
+.auth-form-box .form-link a {
+    font-weight: 500;
+}
+
+/* Input Validation Feedback */
+.form-group {
+    position: relative; /* Needed for error message positioning */
+}
+
+.error-message {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: none; /* Hide by default */
+    text-align: left;
+}
+
+input.invalid {
+    border-color: var(--danger-color);
+}
+
+input.invalid:focus {
+     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+
+input.valid {
+    border-color: var(--success-color);
+}
+input.valid:focus {
+     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+}
+
+/* --- Footer --- */
+/* --- Footer --- */
+
+.main-footer {
+
+     background: var(--dark-color);
+     color: var(--secondary-color);
+     text-align: center;
+     padding: 20px 0;
+     margin-top: auto; /* Push footer down */
+     font-size: 0.9rem;
+ }
+
+ /* --- Add these to your modern-styles.css --- */
+
+/* --- Customer Dashboard General Layout --- */
+.customer-container {
+    max-width: 1100px; /* Wider container for dashboard */
+   /* margin: 30px auto; */
+    margin-top: 30px;
+    margin-bottom: 126px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 20px; /* Padding on the sides */
+}
+
+.welcome-banner {
+    background: linear-gradient(to right, var(--primary-color), #007bff);
+    color: var(--light-color);
+    padding: 25px 30px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+}
+
+.welcome-banner h2 {
+    color: var(--light-color);
+    margin-bottom: 5px;
+    text-align: left;
+}
+.welcome-banner p {
+     font-size: 1.1rem;
+     text-align: left;
+     margin: 0;
+ }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.dashboard-card {
+    background-color: var(--light-color);
+    padding: 25px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.dashboard-card:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+ }
+
+.dashboard-card h3 {
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    color: var(--primary-color);
+    text-align: left;
+}
+
+.dashboard-card .stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 1rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+.dashboard-card .stat-item:last-child {
+    border-bottom: none;
+}
+.dashboard-card .stat-item span:first-child {
+    font-weight: 500;
+    color: var(--dark-color);
+}
+.dashboard-card .stat-item span:last-child {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.dashboard-card .card-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+.dashboard-card .card-actions .btn {
+    margin: 5px;
+}
+
+
+/* --- Booking Form Specific Styles (book_ticket.html) --- */
+.booking-container {
+    max-width: 700px; /* Adjust width for booking form */
+    margin: 30px auto;
+    background-color: var(--light-color);
+    padding: 30px 40px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.booking-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+}
+
+#bookTicketForm .form-group {
+    margin-bottom: 18px;
+    position: relative; /* For error messages */
+}
+
+#bookTicketForm label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+#bookTicketForm input[type="text"],
+#bookTicketForm input[type="number"],
+#bookTicketForm select {
+    width: 100%;
+    padding: 10px 12px; /* Slightly smaller padding */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#bookTicketForm input:focus,
+#bookTicketForm select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25);
+}
+#bookTicketForm input[readonly] {
+     background-color: #e9ecef; /* Different background for readonly */
+     cursor: not-allowed;
+ }
+
+#bookTicketForm button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    margin-top: 15px;
+    background-color: var(--success-color); /* Green for booking */
+}
+#bookTicketForm button[type="submit"]:hover {
+     background-color: #218838; /* Darker green */
+ }
+
+/* --- View Tickets Specific Styles (view_ticket.html) --- */
+.tickets-container {
+    max-width: 1000px; /* Wider container for table */
+    margin: 30px auto;
+    background-color: var(--light-color);
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.tickets-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+}
+
+.tickets-table-wrapper {
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+.tickets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: none; /* Remove duplicate shadow */
+    border-radius: 0;
+    overflow: visible;
+}
+
+.tickets-table th,
+.tickets-table td {
+    padding: 12px 10px; /* Adjust padding */
+    text-align: center; /* Center align table content */
+    border: 1px solid var(--border-color);
+    font-size: 0.95rem; /* Slightly smaller font */
+    vertical-align: middle; /* Align content vertically */
+}
+
+.tickets-table th {
+    background-color: var(--secondary-color);
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.tickets-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.tickets-table td .btn-cancel { /* Style cancel button specifically */
+    background-color: var(--danger-color);
+    color: var(--light-color);
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.tickets-table td .btn-cancel:hover {
+     background-color: #c82333;
+ }
+
+.tickets-container .action-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#cancelModal {
+    
+    max-width: 500px; 
+}
+
+#cancelModal p {
+     font-size: 1.1rem;
+     margin-bottom: 25px;
+     line-height: 1.6;
+ }
+#cancelModal .button-group button {
+     min-width: 80px;
+ }
+
+.promptModal {
+    
+    max-width: 500px; 
+}
+ 
+.promptModal p {
+     font-size: 1.1rem;
+     margin-bottom: 25px;
+     line-height: 1.6;
+ }
+.promptModal .button-group button {
+     min-width: 80px;
+ }
+
+/* No Tickets Message */
+.no-tickets-message {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    background-color: #f8f9fa;
+    border: 1px dashed var(--border-color);
+    border-radius: var(--border-radius-md);
+}
+/* --- Add these to your modern-styles.css --- */
+
+/* --- Admin Section General Layout --- */
+.admin-container {
+    max-width: 1200px; /* Wider container */
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.admin-header {
+    background: linear-gradient(to right, var(--dark-color), #5a6268); /* Dark gradient for admin */
+    color: var(--light-color);
+    padding: 25px 30px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header h2 {
+    color: var(--light-color);
+    margin: 0;
+    text-align: left;
+}
+
+.admin-header .admin-actions button,
+.admin-header .admin-actions a.btn { /* Style buttons/links in header */
+     background-color: var(--light-color);
+     color: var(--dark-color);
+     border: none;
+     margin-left: 10px;
+ }
+.admin-header .admin-actions button:hover,
+.admin-header .admin-actions a.btn:hover {
+     background-color: var(--secondary-color);
+ }
+
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.admin-card {
+    background-color: var(--light-color);
+    padding: 25px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.admin-card h3 {
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    color: var(--primary-color);
+    text-align: left;
+}
+
+/* Ticket Sales Summary Card */
+#salesDataContainer .stat-item { /* Reusing class from customer dashboard */
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 1rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+#salesDataContainer .stat-item:last-child { border-bottom: none; }
+#salesDataContainer .stat-item span:first-child { font-weight: 500; }
+#salesDataContainer .stat-item span:last-child { font-weight: bold; color: var(--primary-color); }
+#salesDataContainer p.no-data { text-align: center; color: #6c757d; margin-top: 15px;}
+
+/* Manage Users/Trains List Styles */
+.management-list {
+    list-style: none;
+    padding: 0;
+    max-height: 300px; /* Limit height and make scrollable */
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+}
+.management-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+.management-list li:last-child { border-bottom: none; }
+.management-list li:nth-child(even) { background-color: #fdfdfd; }
+
+.management-list .item-info {
+    flex-grow: 1;
+    margin-right: 15px;
+    font-size: 0.95rem;
+}
+.management-list .item-info .item-id {
+    font-weight: bold;
+    color: var(--primary-color);
+    display: block; /* Ensure ID is on its own line */
+    margin-bottom: 3px;
+}
+.management-list .item-info .item-details {
+     font-size: 0.85rem;
+     color: #6c757d;
+ }
+
+
+.management-list .item-actions button,
+.management-list .item-actions a.btn {
+    margin-left: 5px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.card-actions { /* General actions area at bottom of card */
+     margin-top: 20px;
+     text-align: right;
+ }
+ .card-actions .btn { margin-left: 10px; }
+
+
+/* --- Manage User Page (manage_user.html) Styles --- */
+.user-management-container {
+    max-width: 1000px;
+    margin: 30px auto;
+    background-color: var(--light-color);
+    padding: 30px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+.user-management-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.users-table-wrapper { overflow-x: auto; }
+.users-table { width: 100%; /* Use general table styles */}
+
+/* Update User Modal Styles */
+#updateUserModal { /* Target specific modal */
+    max-width: 500px;
+}
+#updateUserModal .modal-content { /* Add content wrapper if needed */
+     padding: 30px;
+     text-align: left; /* Align modal content left */
+}
+#updateUserModal h3 {
+     text-align: center;
+     margin-bottom: 25px;
+}
+#updateUserModal .form-group {
+    margin-bottom: 15px;
+}
+#updateUserModal label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+#updateUserModal input { width: 100%; }
+#updateUserModal input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
+#updateUserModal .button-group { margin-top: 25px; justify-content: flex-end; }
+
+
+/* --- Register Train Page (register_train.html) Styles --- */
+.register-train-container {
+    max-width: 600px;
+    margin: 50px auto; /* More vertical margin */
+    background-color: var(--light-color);
+    padding: 40px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+.register-train-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+#trainForm .form-group { margin-bottom: 20px; } /* Use form-group */
+#trainForm label { display: block; margin-bottom: 5px; font-weight: 500; text-align: left;}
+#trainForm input { width: 100%; }
+#trainForm button[type="submit"] { width: 100%; margin-top: 15px; }
+
+
+
+  .password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  .password-toggle-icon i {
+    font-size: 18px;
+    line-height: 1;
+    color: #333;
+    transition: color 0.3s ease-in-out;
+    margin-bottom: 20px;
+  }
+  
+  .password-toggle-icon i:hover {
+    color: #000;
+  }
+  .password-container {
+    position: relative;
+  }
+  
+  .toggle-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .modal-wrapper {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background: white;
+    padding: 20px;
+    max-width: 400px;
+    margin: 3% auto;
+    z-index: 1001;
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modalOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
+  

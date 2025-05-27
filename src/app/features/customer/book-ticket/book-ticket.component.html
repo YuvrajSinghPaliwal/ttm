@@ -1,0 +1,191 @@
+<div class="booking-container">
+  <h2>Book Your Train Ticket</h2>
+
+  <div *ngIf="isLoadingForm || isLoadingStations" class="loading-indicator">Loading form...</div>
+  <div *ngIf="isSubmitting" class="loading-indicator">Processing Booking...</div>
+  <div *ngIf="bookingError && !isSubmitting" class="error-message form-submit-error">{{ bookingError }}</div>
+   <div *ngIf="bookingSuccess" class="success-message form-submit-success">
+      {{ bookingSuccess.message }}
+      <a [routerLink]="['/customer/view-tickets']">View My Tickets</a>
+    </div>
+
+  <form *ngIf="bookTicketForm && !isLoadingForm && !bookingSuccess" id="bookTicketForm" [formGroup]="bookTicketForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <h4>Your Details</h4>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" formControlName="userId" readonly>
+        </div>
+        <div class="form-group">
+            <label for="name">Name (Booker):</label>
+            <input type="text" id="name" formControlName="name" readonly>
+        </div>
+    </div>
+
+    <hr>
+
+    <h4>Select Your Route</h4>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="boardingStation">Origin Station:</label>
+            <select id="boardingStation" formControlName="boardingStation" required [disabled]="isLoadingStations">
+                <option value="" disabled>{{ isLoadingStations ? 'Loading...' : '-- Select Boarding --' }}</option>
+                <option *ngFor="let station of availableStations" [value]="station">{{ station }}</option>
+            </select>
+            <div *ngIf="boardingStation?.invalid && boardingStation?.touched" class="error-message">
+                Origin station is required.
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="destinationStation">Destination Station:</label>
+            <select id="destinationStation" formControlName="destinationStation" required [disabled]="isLoadingStations">
+                <option value="" disabled>{{ isLoadingStations ? 'Loading...' : '-- Select Destination --' }}</option>
+                <option *ngFor="let station of availableStations" [value]="station">{{ station }}</option>
+            </select>
+            <div *ngIf="destinationStation?.invalid && destinationStation?.touched" class="error-message">
+                <span *ngIf="destinationStation?.errors?.['required']">Destination is required.</span>
+            </div>
+             <div *ngIf="bookTicketForm.hasError('stationsSame') && (boardingStation?.touched || destinationStation?.touched)" class="error-message">
+                Origin and destination stations cannot be the same.
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="text-align: center; margin-top: 15px;">
+        <button type="button" (click)="findMatchingTrains()" class="btn" [disabled]="boardingStation?.invalid || destinationStation?.invalid || isLoadingTrains || isLoadingStations">
+            {{ isLoadingTrains ? 'Searching...' : 'Find Trains' }}
+        </button>
+    </div>
+
+    <div *ngIf="searchTriggered">
+        <hr>
+        <h4>Available Trains</h4>
+        <div *ngIf="isLoadingTrains" class="loading-indicator">Searching for available trains...</div>
+
+        <div *ngIf="!isLoadingTrains && foundTrains.length > 0" class="form-group">
+            <label for="trainList">Select Train:</label>
+            <select id="trainList" formControlName="selectedTrainNo" required>
+                <option value="" disabled>-- Select from {{ foundTrains.length }} found trains --</option>
+                 <option *ngFor="let train of foundTrains" [value]="train.trainNo">
+                    {{ train.trainName }} ({{ train.trainNo }}) -
+                    {{ train.originStation }} ({{ train.originArrivalTime ?? train.departureTime ?? '...' }}) to
+                    {{ train.destinationStation }} ({{ train.destinationArrivalTime ?? train.arrivalTime ?? '...' }})
+                    | AC Avail: {{ train.availableAcSeats }} | SL Avail: {{ train.availableSleeperSeats }}
+                </option>
+            </select>
+             <div *ngIf="selectedTrainNo?.invalid && selectedTrainNo?.touched" class="error-message">
+                Please select a train.
+             </div>
+        </div>
+
+        <div *ngIf="!isLoadingTrains && foundTrains.length === 0 && !bookingError" class="no-data">
+            No direct trains found for the selected route. Please try different stations.
+        </div>
+        <div *ngIf="!isLoadingTrains && bookingError && foundTrains.length === 0" class="error-message">
+             {{ bookingError }}
+        </div>
+    </div>
+
+    <div *ngIf="bookTicketForm.get('selectedTrainNo')?.value">
+        <hr>
+        <h4>Journey & Seat Details</h4>
+         <div class="form-row">
+             <div class="form-group">
+                <label for="journeyDate">Journey Date:</label>
+                <input type="date" id="journeyDate" formControlName="journeyDate" required>
+                <div *ngIf="journeyDate?.invalid && journeyDate?.touched" class="error-message">
+                    <span *ngIf="journeyDate?.errors?.['required']">Date required.</span>
+                    <span *ngIf="journeyDate?.errors?.['dateInPast']">Date cannot be in the past.</span>
+                    <span *ngIf="journeyDate?.errors?.['invalidDate']">Invalid date format.</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="acSeats">AC Seats:</label>
+                <input type="number" id="acSeats"  formControlName="acSeats" min="0" (change)="onSeatChange()" (keyup)="onSeatChange()">
+                 <div *ngIf="acSeats?.invalid && acSeats?.touched" class="error-message">Must be 0 or more.</div>
+            </div>
+            <div class="form-group">
+                <label for="slSeats">SL Seats:</label>
+                <input type="number" id="slSeats" formControlName="slSeats" min="0" (change)="onSeatChange()" (keyup)="onSeatChange()">
+                 <div *ngIf="slSeats?.invalid && slSeats?.touched" class="error-message">Must be 0 or more.</div>
+            </div>
+        </div>
+         <div *ngIf="bookTicketForm.hasError('noSeatsSelected') && (acSeats?.touched || slSeats?.touched)" class="error-message">
+                Please select at least one AC or SL seat.
+         </div>
+    </div>
+
+
+    <div *ngIf="(acSeats?.value ?? 0) + (slSeats?.value ?? 0) > 0">
+        <hr>
+        <div *ngIf="bookTicketForm.hasError('seatLimitExceeded') && (acSeats?.touched || slSeats?.touched)" class="error-message form-array-error">
+            Maximum 6 seats can be Booked.
+         </div>
+        <h4>Passenger Details</h4>
+        <div formArrayName="passengers">
+            <div *ngFor="let passengerControl of passengersArray.controls; let i = index" [formGroupName]="i" class="passenger-group">
+               <h5>Passenger {{ i + 1 }}</h5>
+                <div class="form-row">
+                   <div class="form-group">
+                      <label [attr.for]="'passName'+i">Name:</label>
+                      <input type="text" [id]="'passName'+i" formControlName="name" required>
+                       <div *ngIf="passengerControl.get('name')?.invalid && passengerControl.get('name')?.touched" class="error-message">
+                           <span *ngIf="passengerControl.get('name')?.errors?.['required']">Name required.</span>
+                            <span *ngIf="passengerControl.get('name')?.errors?.['pattern']">Invalid characters in name.</span>
+                        </div>
+                   </div>
+                   <div class="form-group">
+                      <label [attr.for]="'passAge'+i">Age:</label>
+                      <input type="number" [id]="'passAge'+i" formControlName="age" required min="1">
+                       <div *ngIf="passengerControl.get('age')?.invalid && passengerControl.get('age')?.touched" class="error-message">
+                           <span *ngIf="passengerControl.get('age')?.errors?.['required']">Age required.</span>
+                           <span *ngIf="passengerControl.get('age')?.errors?.['min'] || passengerControl.get('age')?.errors?.['max']">Age must be 1-120.</span>
+                        </div>
+                   </div>
+                   <div class="form-group">
+                      <label [attr.for]="'passGender'+i">Gender:</label>
+                      <select [id]="'passGender'+i" formControlName="gender" required>
+                          <option value="" disabled>-- Select --</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                      </select>
+                       <div *ngIf="passengerControl.get('gender')?.invalid && passengerControl.get('gender')?.touched" class="error-message">Gender required.</div>
+                   </div>
+                </div>
+            </div>
+             <div *ngIf="passengersArray?.invalid && passengersArray?.touched" class="error-message form-array-error">
+                Please provide valid details for all passengers.
+             </div>
+              <div *ngIf="bookTicketForm.hasError('passengerSeatMismatch') && passengersArray?.touched" class="error-message form-array-error">
+                 Number of passenger details must match the total number of AC + SL seats selected. Current Passengers: {{ passengersArray.length }}, Total Seats: {{ (acSeats?.value ?? 0) + (slSeats?.value ?? 0) }}.
+             </div>
+             
+        </div>
+        </div>
+
+    <hr *ngIf="bookTicketForm.get('selectedTrainNo')?.value"> <div class="form-actions">
+        <button type="submit" class="btn green" [disabled]="bookTicketForm.invalid || isSubmitting || isLoadingTrains">
+           {{ isSubmitting ? 'Booking...' : 'Book Ticket' }}
+        </button>
+        <a routerLink="/customer/dashboard" class="btn">Back to Dashboard</a>
+        <button type="button" (click)="resetFormAndState()" class="btn orange" style="float: right;" [disabled]="isSubmitting">Reset Form</button>
+    </div>
+
+  </form>
+
+  <div *ngIf="!bookTicketForm && !isLoadingForm">Error loading form configuration.</div>
+</div>
+
+<style>
+  .form-row { display: flex; gap: 15px; margin-bottom: 10px; }
+  .form-row .form-group { flex: 1; }
+  .passenger-group { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 5px; background-color: #f9f9f9;}
+  .passenger-group h5 { margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;}
+  .loading-indicator, .success-message, .error-message { text-align: center; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+  .loading-indicator { background-color: #e0e0e0; color: #333; }
+  .success-message { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+  .error-message { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+  .form-submit-error, .form-array-error { margin-top: 10px; }
+</style>

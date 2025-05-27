@@ -1,0 +1,125 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<div class="user-management-container">
+  <h2>Manage Registered Users</h2>
+
+  <div class="action-buttons" style="text-align: right; margin-bottom: 20px;">
+    <a routerLink="/admin/dashboard" class="btn">Back to Dashboard</a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-indicator">Loading users...</div>
+  <div *ngIf="error && !isLoading" class="error-message">{{ error }}</div>
+
+  <div *ngIf="!isLoading && !error && users.length === 0" class="no-data">
+    No registered users found.
+  </div>
+
+  <div *ngIf="!isLoading && !error && users.length > 0" class="users-table-wrapper">
+    <table class="users-table tickets-table"> <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Type/Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="userListTableBody">
+            <tr *ngFor="let user of users">
+                <td>{{ user.userId }}</td>
+                <td>{{ user.userName }}</td>
+                <td>{{ user.email || 'N/A' }}</td>
+                <td>{{ user.contact || 'N/A' }}</td>
+                <td>{{ user.address || 'N/A' }}</td>
+                <td>{{ user.type || 'N/A' }}</td>
+                <td>
+                    <button class="btn orange small update-user-btn" (click)="openUpdateUserModal(user)" [disabled]="isSubmitting">Update</button>
+                    <button class="btn red small delete-user-btn" (click)="openDeleteConfirmModal(user)" [disabled]="isSubmitting">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+
+  <ng-container *ngIf="selectedUser">
+    <div *ngIf="showUpdateUserModal" class="modal-wrapper">
+      <div class="modal"> <h3>Update User: {{ selectedUser.userName }} ({{ selectedUser.userId }})</h3>
+
+        <div *ngIf="isSubmitting" class="loading-indicator">Updating User...</div>
+        <div *ngIf="actionError && !isSubmitting" class="error-message form-submit-error">{{ actionError }}</div>
+
+        <form *ngIf="updateUserForm && !isSubmitting" [formGroup]="updateUserForm" (ngSubmit)="saveUserUpdate()" novalidate>
+          <div class="form-group">
+            <label>User ID:</label>
+            <input type="text" formControlName="userId" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="updateUsername">Username:</label> <input type="text" id="updateUsername" formControlName="userName" required />
+            <div *ngIf="updateUserForm.get('userName')?.invalid && updateUserForm.get('userName')?.touched" class="error-message">Username is required.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="updateEmail">Email:</label> <input type="email" id="updateEmail" formControlName="email" required />
+             <div *ngIf="updateUserForm.get('email')?.invalid && updateUserForm.get('email')?.touched" class="error-message">Valid email required.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="updatePassword">New Password (Optional):</label> <div class="password-wrapper">
+              <input [type]="showPassword ? 'text' : 'password'" id="updatePassword" formControlName="password" />
+              <button type="button" (click)="togglePasswordVisibility()" class="toggle-btn" tabindex="-1">
+                <i [ngClass]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </button>
+            </div>
+            <div *ngIf="updateUserForm.get('password')?.value && updateUserForm.get('password')?.invalid" class="error-message">
+              Min 8 chars, 1 Uppercase, 1 Number, 1 Special Char (@$!%*?&).
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="updateContact">Mobile:</label> <input type="text" id="updateContact" formControlName="contact" required />
+            <div *ngIf="updateUserForm.get('contact')?.invalid && updateUserForm.get('contact')?.touched" class="error-message">
+              Valid 10-digit mobile number required.<br/>
+              Digits cannot be recursive(limit 4)
+            </div>
+          </div>
+
+          <div class="form-group">
+             <label for="updateAddress">Address:</label> <input type="text" id="updateAddress" formControlName="address" required />
+             <div *ngIf="updateUserForm.get('address')?.invalid && updateUserForm.get('address')?.touched" class="error-message">Address is required.</div>
+           </div>
+
+          <div class="form-group">
+             <label for="updateType">Type/Status:</label> <input type="text" id="updateType" formControlName="type" />
+             </div>
+
+          <div class="button-group">
+            <button type="submit" class="btn green" [disabled]="updateUserForm.invalid || isSubmitting">Save</button>
+            <button type="button" class="btn" (click)="closeUpdateUserModal()" [disabled]="isSubmitting">Cancel</button>
+          </div>
+        </form>
+      </div> <div class="modalOverlay" (click)="closeUpdateUserModal()"></div>
+    </div> </ng-container>
+
+  <ng-container *ngIf="userToDelete">
+    <div *ngIf="showDeleteConfirmModal" class="modal-wrapper">
+      <div class="modal">
+        <h3>Confirm Deletion</h3>
+
+         <div *ngIf="isSubmitting" class="loading-indicator">Deleting User...</div>
+         <div *ngIf="actionError && !isSubmitting" class="error-message">{{ actionError }}</div>
+
+        <p *ngIf="!isSubmitting">Are you sure you want to delete user <strong>{{ userToDelete.userName }} ({{ userToDelete.userId }})</strong>?</p>
+        <p *ngIf="!isSubmitting">This action cannot be undone.</p>
+        <div class="button-group">
+          <button (click)="confirmAndDeleteUser()" class="btn red" [disabled]="isSubmitting">Yes, Delete</button>
+          <button (click)="closeDeleteConfirmModal()" class="btn" [disabled]="isSubmitting">No, Cancel</button>
+        </div>
+      </div>
+      <div class="modalOverlay" (click)="closeDeleteConfirmModal()"></div>
+    </div>
+  </ng-container>
+
+</div>

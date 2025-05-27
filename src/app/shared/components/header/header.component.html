@@ -1,0 +1,35 @@
+<header class="main-header">
+  <nav class="navbar">
+    <a routerLink="/" class="logo">
+      <img src="../../../../assets/images/trainLogo.jfif" alt="Train Logo">
+      <span class="logo-text">Vandebharat Railway Portal</span>
+    </a>
+
+    <ul class="nav-links">
+
+      <ng-container *ngIf="!isLoggedIn">
+        <li><a href="/#features">Features</a></li> <li><a href="/#contact">Contact</a></li>   <li><a routerLink="/register" routerLinkActive="active" class="btn-nav">Register</a></li>
+        <li><a routerLink="/login" routerLinkActive="active" class="btn-nav">Login</a></li>
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn">
+
+        <ng-container *ngIf="!isAdminUser">
+            <li><a routerLink="/customer/dashboard" routerLinkActive="active">Dashboard</a></li>
+            <li><a routerLink="/customer/book-ticket" routerLinkActive="active">Book Ticket</a></li>
+            <li><a routerLink="/customer/view-tickets" routerLinkActive="active">View My Tickets</a></li>
+        </ng-container>
+
+        <ng-container *ngIf="isAdminUser">
+            <li><a routerLink="/admin/dashboard" routerLinkActive="active">Admin Dashboard</a></li>
+            <li><a routerLink="/admin/manage-trains" routerLinkActive="active">Manage Trains</a></li>
+            <li><a routerLink="/admin/manage-users" routerLinkActive="active">Manage Users</a></li>
+        </ng-container>
+
+        <li><a href="#" (click)="logout(); $event.preventDefault()" class="btn-nav">Logout</a></li>
+
+      </ng-container>
+
+    </ul>
+  </nav>
+</header>

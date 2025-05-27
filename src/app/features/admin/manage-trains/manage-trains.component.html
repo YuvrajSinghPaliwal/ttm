@@ -1,0 +1,281 @@
+<div class="admin-container">
+  <h2>Manage Trains</h2>
+
+  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <button (click)="showAddTrainForm = !showAddTrainForm" class="btn green" [disabled]="isSubmitting">
+      {{ showAddTrainForm ? 'Cancel Add Train' : 'Add New Train Schedule' }}
+    </button>
+    <a routerLink="/admin/dashboard" class="btn">Back to Dashboard</a>
+  </div>
+
+  <div *ngIf="showAddTrainForm" class="admin-card">
+    <h3>Add New Train Schedule</h3>
+    <div *ngIf="isSubmitting" class="loading-indicator">Saving Train...</div>
+    <div *ngIf="actionError && !isSubmitting" class="error-message form-submit-error">{{ actionError }}</div>
+
+    <form [formGroup]="addTrainForm" (ngSubmit)="submitAddTrain()" novalidate *ngIf="!isSubmitting">
+      <div class="form-row"> <div class="form-group">
+            <label for="addTrainNo">Train No (5 digits):</label>
+            <input type="text" id="addTrainNo" formControlName="trainNo" required pattern="\d{5}" maxlength="5">
+            <div *ngIf="addTrainForm.get('trainNo')?.invalid && addTrainForm.get('trainNo')?.touched" class="error-message">
+                <span *ngIf="addTrainForm.get('trainNo')?.errors?.['required']">Train No is required.</span>
+                <span *ngIf="addTrainForm.get('trainNo')?.errors?.['pattern']">Train No must be 5 digits.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="addTrainName">Train Name:</label>
+            <input type="text" id="addTrainName" formControlName="trainName" required>
+            <div *ngIf="addTrainForm.get('trainName')?.invalid && addTrainForm.get('trainName')?.touched" class="error-message">
+                <span *ngIf="addTrainForm.get('trainName')?.errors?.['required']">Name is required.</span>
+                </div>
+        </div>
+      </div>
+       <div class="form-row">
+        <div class="form-group">
+            <label for="addOrigin">Origin Station:</label>
+            <input type="text" id="addOrigin" formControlName="originStation" required>
+            <div *ngIf="addTrainForm.get('originStation')?.invalid && addTrainForm.get('originStation')?.touched" class="error-message">
+                <span *ngIf="addTrainForm.get('originStation')?.errors?.['required']">Origin is required.</span>
+                <span *ngIf="addTrainForm.get('originStation')?.errors?.['invalidStationName']">Origin contains invalid characters.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="addDestination">Destination Station:</label>
+            <input type="text" id="addDestination" formControlName="destinationStation" required>
+            <div *ngIf="addTrainForm.get('destinationStation')?.invalid && addTrainForm.get('destinationStation')?.touched" class="error-message">
+                <span *ngIf="addTrainForm.get('destinationStation')?.errors?.['required']">Destination is required.</span>
+                <span *ngIf="addTrainForm.get('destinationStation')?.errors?.['invalidStationName']">Destination contains invalid characters.</span>
+                <span *ngIf="addTrainForm.get('destinationStation')?.errors?.['stationsSame']">Origin and Destination cannot be the same.</span>
+            </div>
+            <div *ngIf="addTrainForm.hasError('stationsSame') && !addTrainForm.get('destinationStation')?.hasError('stationsSame') && (addTrainForm.get('destinationStation')?.touched || addTrainForm.get('originStation')?.touched)" class="error-message">
+                Origin and Destination cannot be the same.
+            </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addDeparture">Departure Time (HH:mm):</label>
+          <input type="time" id="addDeparture" formControlName="departureTime" required>
+          <div *ngIf="addTrainForm.get('departureTime')?.invalid && addTrainForm.get('departureTime')?.touched" class="error-message">Valid HH:mm time required.</div>
+        </div>
+        <div class="form-group">
+          <label for="addArrival">Arrival Time (HH:mm):</label>
+          <input type="time" id="addArrival" formControlName="arrivalTime" required>
+          <div *ngIf="addTrainForm.get('arrivalTime')?.invalid && addTrainForm.get('arrivalTime')?.touched" class="error-message">Valid HH:mm time required.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addDistance">Distance (km):</label>
+          <input type="number" id="addDistance" formControlName="distance" required min="1">
+          <div *ngIf="addTrainForm.get('distance')?.invalid && addTrainForm.get('distance')?.touched" class="error-message">Valid distance required (&gt;0).</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addTotalAcSeats">Total AC Seats:</label>
+          <input type="number" id="addTotalAcSeats" formControlName="totalAcSeats" required min="0">
+          <div *ngIf="addTrainForm.get('totalAcSeats')?.invalid && addTrainForm.get('totalAcSeats')?.touched" class="error-message">Valid AC seat count required (&gt;=0).</div>
+        </div>
+        <div class="form-group">
+          <label for="addTotalSlSeats">Total SL Seats:</label>
+          <input type="number" id="addTotalSlSeats" formControlName="totalSleeperSeats" required min="0">
+          <div *ngIf="addTrainForm.get('totalSleeperSeats')?.invalid && addTrainForm.get('totalSleeperSeats')?.touched" class="error-message">Valid SL seat count required (&gt;=0).</div>
+        </div>
+      </div>
+
+      <div class="button-group">
+          <button type="submit" class="btn green" [disabled]="addTrainForm.invalid || isSubmitting">Save New Train</button>
+          <button type="button" (click)="showAddTrainForm = false; addTrainForm.reset()" class="btn" [disabled]="isSubmitting">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+
+  <hr style="margin: 20px 0;">
+
+  <h3>Existing Trains</h3>
+  <div *ngIf="isLoading" class="loading-indicator">Loading trains...</div>
+  <div *ngIf="error && !isLoading" class="error-message">{{ error }}</div>
+  <div *ngIf="!isLoading && !error && trains.length === 0" class="no-data">No trains found. Add one above!</div>
+
+  <div *ngIf="!isLoading && !error && trains.length > 0" class="trains-table-wrapper">
+    <table class="tickets-table"> <thead>
+            <tr>
+                <th>Train No</th>
+                <th>Name</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Distance</th>
+                <th>Total AC</th>
+                <th>Avail AC</th>
+                <th>Total SL</th>
+                <th>Avail SL</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let train of trains">
+                <td>{{ train.trainNo }}</td>
+                <td>{{ train.trainName }}</td>
+                <td>{{train.originStation }}</td>
+                <td>{{train.destinationStation }}</td>
+                <td>{{ train.departureTime }}</td>
+                <td>{{ train.arrivalTime }}</td>
+                <td>{{ train.distance }} km</td>
+                <td>{{ train.totalAcSeats }}</td>
+                <td>{{ train.availableAcSeats }}</td>
+                <td>{{ train.totalSleeperSeats }}</td>
+                <td>{{ train.availableSleeperSeats }}</td>
+                <td class="action-cell">
+                    <button class="btn orange small" (click)="openUpdateModal(train)" title="Update Details" [disabled]="isSubmitting">Update</button>
+                    <button class="btn small" (click)="openRouteModal(train)" title="Manage Route" [disabled]="isSubmitting">Route</button> <button class="btn red small" (click)="openDeleteConfirmModal(train)" title="Delete Train" [disabled]="isSubmitting">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+
+
+  <ng-container *ngIf="selectedTrain">
+    <div *ngIf="showUpdateModal" class="modal" style="display: block;">
+      <div class="modal-content" style="max-width: 550px;"> <h3>Update Train Schedule: {{ selectedTrain.trainName }} ({{ selectedTrain.trainNo }})</h3>
+
+        <div *ngIf="isSubmitting" class="loading-indicator">Updating Train...</div>
+        <div *ngIf="actionError && !isSubmitting" class="error-message form-submit-error">{{ actionError }}</div>
+
+        <form *ngIf="updateTrainForm && !isSubmitting" [formGroup]="updateTrainForm" (ngSubmit)="saveTrainUpdate()" novalidate>
+            <div class="form-row">
+                 <div class="form-group"> <label>Train ID (PK):</label> <input type="text" formControlName="trainId" readonly> </div>
+                 <div class="form-group"> <label>Train No:</label> <input type="text" formControlName="trainNo" readonly> </div>
+             </div>
+             <div class="form-group">
+                <label for="updateName">Name:</label>
+                <input type="text" id="updateName" formControlName="trainName" required>
+                <div *ngIf="updateTrainForm.get('trainName')?.invalid && updateTrainForm.get('trainName')?.touched" class="error-message">Name is required.</div>
+            </div>
+             <div class="form-row">
+                <div class="form-group"><label>Origin:</label><input type="text" formControlName="originStation" readonly></div>
+                <div class="form-group"><label>Destination:</label><input type="text" formControlName="destinationStation" readonly></div>
+             </div>
+             <div class="form-row">
+                <div class="form-group">
+                    <label for="updateDeparture">Departure Time:</label>
+                    <input type="time" id="updateDeparture" formControlName="departureTime" required>
+                    <div *ngIf="updateTrainForm.get('departureTime')?.invalid && updateTrainForm.get('departureTime')?.touched" class="error-message">Valid HH:mm time required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="updateArrival">Arrival Time:</label>
+                    <input type="time" id="updateArrival" formControlName="arrivalTime" required>
+                    <div *ngIf="updateTrainForm.get('arrivalTime')?.invalid && updateTrainForm.get('arrivalTime')?.touched" class="error-message">Valid HH:mm time required.</div>
+                </div>
+             </div>
+              <div class="form-group">
+                    <label for="updateDistance">Distance (km):</label>
+                    <input type="number" id="updateDistance" formControlName="distance" required min="1">
+                    <div *ngIf="updateTrainForm.get('distance')?.invalid && updateTrainForm.get('distance')?.touched" class="error-message">Valid distance required (&gt;0).</div>
+             </div>
+             <div class="form-row">
+                 <div class="form-group">
+                    <label for="updateTotalAcSeats">Total AC Seats:</label>
+                    <input type="number" id="updateTotalAcSeats" formControlName="totalAcSeats" required min="0">
+                    <div *ngIf="updateTrainForm.get('totalAcSeats')?.invalid && updateTrainForm.get('totalAcSeats')?.touched" class="error-message">Valid count required (&gt;=0).</div>
+                </div>
+                <div class="form-group">
+                    <label for="updateAvailableAcSeats">Available AC Seats:</label>
+                    <input type="number" id="updateAvailableAcSeats" formControlName="availableAcSeats" required min="0">
+                    <div *ngIf="updateTrainForm.get('availableAcSeats')?.invalid && updateTrainForm.get('availableAcSeats')?.touched" class="error-message">Valid count required (&gt;=0).</div>
+                    <div *ngIf="updateTrainForm.get('availableAcSeats')?.value > updateTrainForm.get('totalAcSeats')?.value" class="error-message">Cannot exceed total seats.</div>
+                </div>
+             </div>
+             <div class="form-row">
+                 <div class="form-group">
+                    <label for="updateTotalSlSeats">Total SL Seats:</label>
+                    <input type="number" id="updateTotalSlSeats" formControlName="totalSleeperSeats" required min="0">
+                    <div *ngIf="updateTrainForm.get('totalSleeperSeats')?.invalid && updateTrainForm.get('totalSleeperSeats')?.touched" class="error-message">Valid count required (&gt;=0).</div>
+                 </div>
+                 <div class="form-group">
+                    <label for="updateAvailableSlSeats">Available SL Seats:</label>
+                    <input type="number" id="updateAvailableSlSeats" formControlName="availableSleeperSeats" required min="0">
+                     <div *ngIf="updateTrainForm.get('availableSleeperSeats')?.invalid && updateTrainForm.get('availableSleeperSeats')?.touched" class="error-message">Valid count required (&gt;=0).</div>
+                    <div *ngIf="updateTrainForm.get('availableSleeperSeats')?.value > updateTrainForm.get('totalSleeperSeats')?.value" class="error-message">Cannot exceed total seats.</div>
+                </div>
+            </div>
+          <div class="button-group">
+            <button type="submit" class="btn green" [disabled]="updateTrainForm.invalid || isSubmitting">Save Changes</button>
+            <button type="button" (click)="closeUpdateModal()" class="btn" [disabled]="isSubmitting">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="showUpdateModal" class="modalOverlay" (click)="closeUpdateModal()"></div>
+  </ng-container>
+
+
+  <div *ngIf="showRouteModal && selectedTrain" class="modal" style="display: block;">
+    <div class="modal-content" style="max-width: 800px;">
+      <h3>Manage Route for {{ selectedTrain.trainName }} ({{ selectedTrain.trainNo }})</h3>
+  
+      <form [formGroup]="manageRouteForm" (ngSubmit)="saveRouteUpdate()">
+        
+        <div *ngIf="actionError" class="error-message form-submit-error">{{ actionError }}</div>
+  
+       
+            <div class="form-row">
+              <div class="form-group">
+                <label >trainNo</label>
+                <input type="text"  formControlName="trainNo" [value]="selectedTrain.trainNo"  />
+              </div>
+              <div class="form-group">
+                <label >Station Name</label>
+                <input type="text"  formControlName="station" required/>
+              </div>
+              <div class="form-group">
+                <label>Stop #</label>
+                <input type="number" formControlName="stopNumber"  required/>
+              </div>
+              <div class="form-group">
+                <label >Arrival Time</label>
+                <input type="time"  formControlName="arrivalTime" required/>
+              </div>
+              <div class="form-group">
+                <label >Departure Time</label>
+                <input type="time"  formControlName="arrivalTime" required/>
+              </div>
+              <div class="form-group">
+                <label >Distance from source(km)</label>
+                <input type="number"  formControlName="distanceFromSource" required min="0" />
+              </div>
+              
+            
+            </div>
+          
+  
+        <div class="button-group mt-2">
+          
+          <button type="submit" class="btn green" >Save Route</button>
+          <button type="button" class="btn" (click)="closeRouteModal()" [disabled]="isSubmitting">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+<!-- ---------------- -->
+  <ng-container *ngIf="trainToDelete">
+    <div *ngIf="showDeleteConfirmModal" class="modal" style="display: block;">
+      <div class="modal-content">
+        <h3>Confirm Deletion</h3>
+         <div *ngIf="isSubmitting" class="loading-indicator">Deleting...</div>
+         <div *ngIf="actionError && !isSubmitting" class="error-message">{{ actionError }}</div>
+
+        <p *ngIf="!isSubmitting">Are you sure you want to delete train <strong>{{ trainToDelete.trainName }} ({{ trainToDelete.trainNo }})</strong>?</p>
+        <p *ngIf="!isSubmitting">This action cannot be undone.</p>
+        <div class="button-group">
+          <button (click)="confirmAndDeleteTrain()" class="btn red" [disabled]="isSubmitting">Yes, Delete Train</button>
+          <button (click)="closeDeleteConfirmModal()" class="btn" [disabled]="isSubmitting">No, Cancel</button>
+        </div>
+      </div>
+    </div>
