@@ -1,0 +1,38 @@
+# set the name for the application
+spring:
+   application:
+      name: api-gateway
+   config:
+        import: optional:configserver
+   cloud:
+        gateway:
+           default-filters:
+              - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+           globalcors:
+              corsConfigurations:
+                 '[/**]':
+                     allowedOrigins: "*"
+                     allowedHeaders: "*"
+                     allowedMethods:
+                        - GET
+                        - POST
+                        - DELETE
+                        - PUT
+                        - OPTIONS        
+           routes:
+              - id: USER
+                uri: lb://USER
+                predicates:
+                    - Path=/user**
+ 
+# set up the port for the application
+server:
+   port: 9001
+# setting up the eureka client
+eureka:
+   instance:
+      prefer-ip-address: false
+   client:
+      register-with-eureka: true
+      service-url:
+         defaultzone: http://localhost:8761/eureka
